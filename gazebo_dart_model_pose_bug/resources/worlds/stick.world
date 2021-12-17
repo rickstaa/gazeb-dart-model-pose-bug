@@ -9,6 +9,11 @@
     <include>
       <uri>model://ground_plane</uri>
     </include>
+    <!--A cube-->
+    <include>
+      <uri>model://cube</uri>
+      <pose>0.4 0 0.0 0 0 0</pose>
+    </include>
     <!--Camera settings-->
     <gui fullscreen='0'>
       <camera name='user_camera'>

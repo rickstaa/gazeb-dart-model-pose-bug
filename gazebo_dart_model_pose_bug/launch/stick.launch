@@ -24,8 +24,10 @@
   <!--Gazebo Parameters-->
   <arg name="gazebo" default="true" doc="Should the gazebo simulation be launched? Use false in case if you want to include this file and launch gazebo yourself" />
   <arg name="paused" default="true" doc="Should the simulation directly be stopped at 0s?" />
-  <arg name="world" default="worlds/stick.world" doc="Filename to a SDF World for gazebo to use" />
+  <arg name="world" default="$(find gazebo_bug_reproduce)/resources/worlds/stick.world" doc="Filename to a SDF World for gazebo to use" />
+  <!-- <arg name="world" default="$(find gazebo_bug_reproduce)/resources/worlds/stick.world" doc="Filename to a SDF World for gazebo to use" /> -->
   <arg name="physics" default="ode"/> <!--Phyics engine: options are bullet|dart|ode|simbody-->
+  <arg name="verbose" default="false"/>
 
   <!--Launch Gazebo-->
   <include file="$(find gazebo_ros)/launch/empty_world.launch" if="$(arg gazebo)">
@@ -33,6 +35,7 @@
     <!-- Always start in paused mode, and only unpause when spawning the model -->
     <arg name="paused" value="true"/>
     <arg name="physics" value="$(arg physics)"/>
+    <arg name="verbose" value="$(arg verbose)"/>
   </include>
 
   <!--Load stick-->
