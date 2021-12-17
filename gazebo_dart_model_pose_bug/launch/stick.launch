@@ -1,0 +1,56 @@
+<!--Stick with 7 joints-->
+<launch>
+  <arg name="start_trajectory_controller" default="false" doc="Should we load the joint trajectory controller?" />
+  <arg name="controller_gui" default="true" doc="Load joint trajectory controller gui."/>
+  <arg name="controller_manager_gui" default="true" doc="Load the controller manager gui."/>
+  <arg name="gravity_compensation" default="true" doc="Enable the gravity compensator."/>
+
+  <!--Stick parameters-->
+  <arg name="x" default="0" doc="How far forward to place the base of the stick in [m]?" />
+  <arg name="y" default="0" doc="How far leftwards to place the base of the stick in [m]?" />
+  <arg name="z" default="0" doc="How far upwards to place the base of the stick in [m]?" />
+  <arg name="roll" default="0" doc="How much to rotate the base of the stick around its X-axis in [rad]?" />
+  <arg name="pitch" default="0" doc="How much to rotate the base of the stick around its Y-axis in [rad]?" />
+  <arg name="yaw" default="0" doc="How much to rotate the base of the stick around its Z-axis in [rad]?" />
+  <arg name="initial_joint_positions" doc="Initial joint configuration of the Stick. Specify as a list of name/value pairs in form of '-J [name-of-joint] [value-in-rad]'. Default is a 90 degree bend in the elbow" default="
+            -J stick_joint1 0
+            -J stick_joint2 0
+            -J stick_joint3 0
+            -J stick_joint4 0"/>
+
+  <!--Toggle gazebo DefaultHWSim options-->
+  <param name="gravity_compensation" value="$(arg gravity_compensation)"/>
+
+  <!--Gazebo Parameters-->
+  <arg name="gazebo" default="true" doc="Should the gazebo simulation be launched? Use false in case if you want to include this file and launch gazebo yourself" />
+  <arg name="paused" default="true" doc="Should the simulation directly be stopped at 0s?" />
+  <arg name="world" default="worlds/stick.world" doc="Filename to a SDF World for gazebo to use" />
+  <arg name="physics" default="ode"/> <!--Phyics engine: options are bullet|dart|ode|simbody-->
+
+  <!--Launch Gazebo-->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch" if="$(arg gazebo)">
+    <arg name="world_name" value="$(arg world)"/>
+    <!-- Always start in paused mode, and only unpause when spawning the model -->
+    <arg name="paused" value="true"/>
+    <arg name="physics" value="$(arg physics)"/>
+  </include>
+
+  <!--Load stick-->
+  <include file="$(find gazebo_bug_reproduce)/launch/stick.launch.xml">
+    <arg name="x" value="0"/>
+    <arg name="y" value="0"/>
+    <arg name="z" value="0"/>
+    <arg name="roll" value="0"/>
+    <arg name="pitch" value="0"/>
+    <arg name="yaw" value="0"/>
+    <arg name="paused" value="$(arg paused)"/>
+    <arg name="initial_joint_positions" value="$(arg initial_joint_positions)"/>
+    <arg name="start_trajectory_controller" value="$(arg start_trajectory_controller)"/>
+  </include>
+
+  <!--Load rqt joint trajectory controller-->
+  <node if="$(arg controller_gui)" pkg="rqt_joint_trajectory_controller" type="rqt_joint_trajectory_controller" output="screen" name="rqt_joint_trajectory_controller_stick1"/>
+
+  <!--Load controller manager gui-->
+  <node if="$(arg controller_manager_gui)" pkg="rqt_controller_manager" type="rqt_controller_manager" name="rqt_controller_manager"/>
+</launch>

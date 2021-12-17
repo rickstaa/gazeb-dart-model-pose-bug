@@ -1,0 +1,17 @@
+joint_state_controller:
+  type: joint_state_controller/JointStateController
+  publish_rate: 50
+
+# Joint effort trajectory
+effort_joint_trajectory_controller:
+  type: effort_controllers/JointTrajectoryController
+  joints:
+    - $(arg robot_name)_joint1
+    - $(arg robot_name)_joint2
+    - $(arg robot_name)_joint3
+    - $(arg robot_name)_joint4
+  gains:
+    $(arg robot_name)_joint1: { p: 1000, d: 0, i: 0 }
+    $(arg robot_name)_joint2: { p: 200, d: 0, i: 0 }
+    $(arg robot_name)_joint3: { p: 10, d: 0, i: 0 }
+    $(arg robot_name)_joint4: { p: 5, d: 0, i: 0 }
